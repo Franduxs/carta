@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <script>
+    window.capturedErrors = [];
+    window.onerror = function(msg, url, line, col, err) {
+      window.capturedErrors.push({msg: msg, line: line, err: err ? err.stack : null});
+      var d = document.createElement('div');
+      d.id = 'global-error-display';
+      d.textContent = 'ERR: ' + msg + ' (' + line + ')';
+      document.documentElement.appendChild(d);
+    };
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Ramo de Flores Moradas • Para Moni 💜</title>
+  
+  <meta name="description" content="Un ramo botánico interactivo en 3D para Moni en el día de las flores moradas.">
+  <meta property="og:title" content="Ramo de Flores Moradas • Para Moni 💜">
+  <meta property="og:description" content="Te dije que las promesas se cumplen, y yo no me olvido de lo mío.">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Three.js (Usa copia local optimizada con fallback a CDN) -->
+  <script src="three.min.js"></script>
+</head>
+<body>
+
+  <!-- WebGL 3D Canvas -->
+  <div id="canvas-container"></div>
+
+  <!-- Luces ambientales de fondo -->
+  <div class="ambient-glow"></div>
+
+  <!-- Viñeta de abrazo inmersivo -->
+  <div class="screen-vignette" id="screenVignette"></div>
+
+  <!-- UI Overlay -->
+  <div class="ui-layer">
+    
+    <!-- Header con Reproductor Romántico de Canciones Lindas -->
+    <header class="top-bar">
+      <div class="badge">9 DE OCTUBRE</div>
+
+      <!-- Music Player Widget -->
+      <div class="music-player-pill" id="musicPlayerWidget">
+        
+        <!-- Botón Selector Desplegable -->
+        <button class="track-btn" id="btnTrackSelector" title="Seleccionar canción linda" aria-label="Elegir canción">
+          <span class="track-icon" id="playerTrackIcon">💜</span>
+          <span class="track-name" id="playerTrackTitle">Golden Hour</span>
+          <svg class="chevron-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+
+        <!-- Controles Play y Siguiente -->
+        <div class="player-actions">
+          <button id="btnPlayerPlay" class="action-btn play-pause-btn" aria-label="Reproducir o pausar" title="Reproducir / Pausar">
+            <svg class="icon-play" viewBox="0 0 24 24"><polygon points="7,5 19,12 7,19" fill="currentColor"/></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="currentColor"/><rect x="14" y="5" width="4" height="14" fill="currentColor"/></svg>
+          </button>
+          <button id="btnPlayerNext" class="action-btn next-track-btn" aria-label="Siguiente canción" title="Siguiente canción linda">
+            <svg viewBox="0 0 24 24"><polygon points="6,5 15,12 6,19" fill="currentColor"/><rect x="16" y="5" width="3" height="14" fill="currentColor"/></svg>
+          </button>
+        </div>
+
+        <!-- Menú Pop-up Desplegable de Canciones -->
+        <div class="track-menu-popover" id="trackMenuPopover">
+          <div class="menu-title">Canciones Lindas 💜</div>
+          <div class="track-menu-list">
+            <button class="menu-track-option active" data-index="0">
+              <span class="opt-icon">💜</span>
+              <div class="opt-info">
+                <span class="opt-name">Golden Hour / Atardecer Morado</span>
+                <span class="opt-desc">Piano romántico & arpegios suaves</span>
+              </div>
+            </button>
+            <button class="menu-track-option" data-index="1">
+              <span class="opt-icon">✨</span>
+              <div class="opt-info">
+                <span class="opt-name">Cajita de Recuerdos</span>
+                <span class="opt-desc">Celesta & campanas dulces</span>
+              </div>
+            </button>
+            <button class="menu-track-option" data-index="2">
+              <span class="opt-icon">🌙</span>
+              <div class="opt-info">
+                <span class="opt-name">Brisa de Medianoche</span>
+                <span class="opt-desc">Acordes etéreos & cálidos</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Indicador táctil flotante -->
+    <div class="touch-hint" id="touchHint">
+      <span>✨ Toca cada flor o gira el ramo en 3D ✨</span>
+    </div>
+
+    <!-- Carta / Nota Expandible (Auténtica, sincera y cercana para Moni) -->
+    <main class="bottom-card-wrapper">
+      <article class="glass-card" id="noteCard">
+        
+        <div class="card-pill-header" id="cardToggle">
+          <span class="drag-handle"></span>
+          <div class="pill-titles">
+            <h1 class="card-title">Para ti, Moni 💜</h1>
+            <p class="card-subtitle">Toca para abrir la nota</p>
+          </div>
+          <button class="expand-btn" aria-label="Abrir o cerrar nota" id="btnToggleArrow">
+            <svg viewBox="0 0 24 24" class="arrow-svg"><path d="M7 14l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+
+        <div class="card-content" id="cardContent">
+          <p class="text-lead">
+            Te dije que las promesas se cumplen, y yo no me olvido de lo mío.
+          </p>
+
+          <p class="text-body">
+            Hoy es 9 de octubre, y aunque medio mundo ande con la moda de las flores moradas, para mí esto no es por sumarme a una tendencia. Es porque quería recordarte algo bien simple:
+          </p>
+
+          <div class="highlight-line">
+            <span>Me encanta verte feliz y reírte de cualquier tontería, pero también quiero que sepas que estoy aquí para esos días grises donde se te junta todo, te da el bajón y ni tú misma te entiendes. En esos también me quedo, firme.</span>
+          </div>
+
+          <p class="text-body">
+            Gracias por ser tan tú, Moni. Espero haberte sacado esa sonrisa bonita que tienes.
+          </p>
+
+          <footer class="card-footer">
+            <div class="signature">
+              <span class="from">Con cariño sincero,</span>
+              <span class="author">Franduxs</span>
+            </div>
+            
+            <button id="btnHug" class="hug-btn" aria-label="Dar un abrazo">
+              <span class="heart-pulse">💜</span>
+              <span id="hugCountLabel">Un abacito</span>
+            </button>
+          </footer>
+        </div>
+
+      </article>
+    </main>
+
+  </div>
+
+  <!-- Scripts modulares -->
+  <script src="js/audio.js"></script>
+  <script src="js/botanicalTextures.js"></script>
+  <script src="js/botanicalAtmosphere.js"></script>
+  <script src="js/flower3d.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
