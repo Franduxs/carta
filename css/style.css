@@ -630,3 +630,53 @@ html, body {
     flex-shrink: 0;
   }
 }
+
+/* Yadi ? jard?n de medianoche: una flor y una carta con su propio espacio. */
+body { background: radial-gradient(ellipse at 30% 42%, #30203b 0%, #170d23 42%, #0d0815 78%); }
+.ambient-glow { width: 70vw; height: 70vw; opacity: .65; background: radial-gradient(circle, #b17bb326, transparent 65%); }
+.top-bar { max-width: none; }
+.badge { background: transparent; border-color: #dfc5e233; color: #e0c7da; font-weight: 400; letter-spacing: .2em; font-size: .65rem; }
+.ui-layer { padding: 30px 4vw; }
+.bottom-card-wrapper { position: absolute; right: 5vw; top: 50%; transform: translateY(-43%); width: 35vw; max-width: 470px; }
+.glass-card { background: linear-gradient(145deg, #281a32dd, #170f23ef); border-color: #d3b1cd33; border-radius: 24px; box-shadow: 0 30px 80px #0005, inset 0 1px #ffe8fb12; }
+.card-title { font-family: var(--font-serif); font-weight: 400; font-size: 1.7rem; color: #f4deee; }
+.card-pill-header { padding: 1.4rem 1.5rem 1rem; }
+.drag-handle { display: none; }
+.text-body { color: #dfcedf; line-height: 1.75; font-size: .86rem; }
+.text-lead { color: #fff0ed; font-family: var(--font-serif); font-size: 1.06rem; }
+.highlight-line { background: #b487ad0c; border-color: #d2a4bd; padding: .65rem 1rem; }
+.highlight-line span { color: #edcddd; line-height: 1.7; }
+.signature .author { color: #e8b6cb; text-shadow: none; }
+.hug-btn { background: linear-gradient(135deg, #956b9d, #b685a5); box-shadow: 0 4px 20px #b685a51a; }
+.music-player-pill { background: #24172caa; border-color: #d3b1cd33; }
+.action-btn { background: #b487ad15; border-color: #d3b1cd33; }
+.touch-hint { position: absolute; left: 0; top: 85%; width: 58%; margin: 0; font-size: .68rem; letter-spacing: .10em; animation: none; opacity: .65; }
+.garden-heading { position: absolute; left: 5vw; top: 14%; pointer-events: none; }
+.garden-heading p { font-size: .63rem; text-transform: uppercase; letter-spacing: .35em; color: #d6b7c6; margin-bottom: .75rem; }
+.garden-heading h2 { font-family: var(--font-serif); font-weight: 400; font-size: clamp(2rem, 3.7vw, 3.7rem); line-height: 1.12; color: #f3e3ef; }
+.garden-heading h2 em { font-weight: 400; color: #d7b1d4; }
+.glass-card.expanded .card-content { max-height: min(65vh, 650px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: #916c96 transparent; }
+@media (max-width: 760px) {
+ .ui-layer { padding: max(16px, env(safe-area-inset-top)) 18px 16px; }
+ .badge { max-width: 40%; white-space: normal; line-height: 1.6; font-size: .55rem; padding: 0; border: 0; }
+ .garden-heading { left: 24px; top: 12%; }
+ .garden-heading p { font-size: .52rem; margin-bottom: .4rem; }
+ .garden-heading h2 { font-size: 1.8rem; }
+ .bottom-card-wrapper { left: 16px; right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); top: auto; transform: none; width: auto; max-width: none; }
+ .glass-card { border-radius: 20px; }
+ .card-title { font-size: 1.25rem; }
+ .card-pill-header { padding: 1rem 1.1rem .75rem; }
+ .glass-card.expanded .card-content { max-height: 29dvh; padding: .25rem 1.1rem 1rem; gap: .8rem; }
+ .text-body { font-size: .83rem; }
+ .touch-hint { top: 55%; width: 100%; font-size: .57rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+ *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+}
+
+@media (max-width: 760px) and (max-height: 700px) {
+ .garden-heading { top: 11%; }
+ .garden-heading h2 { font-size: 1.45rem; }
+ .garden-heading p { font-size: .45rem; }
+ .touch-hint { display: none; }
+}

@@ -181,13 +181,13 @@ const BotanicalPetalTextures = (function () {
     const fields = options.fields || computePetalFields(width, height, options);
     const { veinBuffer, cellBuffer } = fields;
 
-    const cDeepBase = hexToRGB(options.colorDeepBase || '#2e0854');
-    const cRoyalMid = hexToRGB(options.colorRoyalMid || '#4a0e8f');
-    const cOrchid   = hexToRGB(options.colorOrchid   || '#7b2cbf');
-    const cLavanda  = hexToRGB(options.colorLavanda  || '#9d4edd');
-    const cLavLight = hexToRGB(options.colorLavLight || '#c77dff');
-    const cLavPale  = hexToRGB(options.colorLavPale  || '#e0aaff');
-    const cEdgeRim  = hexToRGB(options.colorEdgeRim  || '#f3e8ff');
+    const cDeepBase = hexToRGB(options.colorDeepBase || '#704183');
+    const cRoyalMid = hexToRGB(options.colorRoyalMid || '#9766ad');
+    const cOrchid   = hexToRGB(options.colorOrchid   || '#bd8ecd');
+    const cLavanda  = hexToRGB(options.colorLavanda  || '#d6b0e2');
+    const cLavLight = hexToRGB(options.colorLavLight || '#e9c9ed');
+    const cLavPale  = hexToRGB(options.colorLavPale  || '#efdae9');
+    const cEdgeRim  = hexToRGB(options.colorEdgeRim  || '#fff2ed');
 
     for (let y = 0; y < height; y++) {
       const v = 1.0 - (y / height);
@@ -226,7 +226,7 @@ const BotanicalPetalTextures = (function () {
         const veinColorBase = [34, 4, 62];
         const veinColorApex = [138, 43, 226];
         const veinTone = lerpRGB(veinColorBase, veinColorApex, v * 0.85);
-        const finalColor = lerpRGB(petalColor, veinTone, vein * 0.48);
+        const finalColor = lerpRGB(petalColor, veinTone, vein * 0.10);
 
         const microShade = (cell - 0.5) * 7.5;
 
@@ -258,7 +258,7 @@ const BotanicalPetalTextures = (function () {
     const fields = options.fields || computePetalFields(width, height, options);
     const { heightBuffer } = fields;
 
-    const normalStrength = options.normalStrength !== undefined ? options.normalStrength : 4.2;
+    const normalStrength = options.normalStrength !== undefined ? options.normalStrength : 0.7;
 
     for (let y = 0; y < height; y++) {
       const rowOffset = y * width;
@@ -396,18 +396,16 @@ const BotanicalPetalTextures = (function () {
 
     return new T.MeshPhysicalMaterial({
       map: textures.albedoTexture,
-      normalMap: textures.normalTexture,
+      // Soft petal surfaces use geometry normals to avoid noisy microfacets.
       normalScale: new T.Vector2(normalScale, normalScale),
-      roughnessMap: textures.roughnessTexture,
+
       roughness: 1.0,
       metalness: 0.02,
 
       // En Three.js r128 sheen debe ser THREE.Color directamente
-      sheen: sheenColor,
+      sheen: sheenColor.clone().multiplyScalar(0.08),
 
       transmission: options.transmission !== undefined ? options.transmission : 0.35,
-      thickness: options.thickness !== undefined ? options.thickness : 0.45,
-      ior: 1.48,
 
       clearcoat: 0.22,
       clearcoatRoughness: 0.32,

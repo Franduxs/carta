@@ -42,26 +42,19 @@ class BotanicalPetalGeometry extends THREE.BufferGeometry {
     let vIdx = 0, uvIdx = 0, cIdx = 0;
 
     const colClaw = new THREE.Color(0xf5e8ff); // Uña: lavanda translúcido
-    const colDeep = new THREE.Color(0x3b0764); // Interior terciopelo oscuro
-    const colMid = new THREE.Color(0x9333ea);  // Cuerpo amatista vibrante
+    const colDeep = new THREE.Color(0x9863b7); // Interior terciopelo oscuro
+    const colMid = new THREE.Color(0xd8afe9);  // Cuerpo amatista vibrante
     const colTip = new THREE.Color(0xd8b4fe);  // Ápice luminoso
 
     for (let j = 0; j <= vSegs; j++) {
       const v = j / vSegs;
 
       const baseWidthFactor = tier <= 2 ? 0.18 : 0.08;
-      const widthEnvelope = baseWidthFactor + (1.0 - baseWidthFactor) * Math.sin(Math.pow(v, 0.72) * Math.PI) * (1.0 - 0.12 * v * v);
+      const widthEnvelope = baseWidthFactor + (1.0 - baseWidthFactor) * Math.pow(Math.sin(v * Math.PI), 0.50) * (1.0 - 0.04 * v);
       const effectiveHalfWidth = (width * 0.5) * Math.max(0.05, widthEnvelope);
 
-      let zLong = 0;
-      if (tier <= 2) {
-        zLong = -curl * Math.pow(v, 1.6);
-      } else if (tier === 3) {
-        zLong = curl * Math.pow(v, 1.4) - 0.15 * Math.pow(Math.max(0, v - 0.6), 2.0);
-      } else {
-        const tipReflex = Math.pow(Math.max(0.0, v - 0.44), 2.2);
-        zLong = curl * Math.pow(v, 1.5) - reflex * tipReflex;
-      }
+      // A smooth spoon-like curve, without folds that cross adjacent petals.
+      const zLong = curl * v * v * 0.45 - reflex * Math.pow(v, 5) * 0.10;
 
       for (let i = 0; i <= uSegs; i++) {
         const uNorm = (i / uSegs) * 2.0 - 1.0;
@@ -192,11 +185,11 @@ class BotanicalGeometryPool {
   initGeometries() {
     // 5 Geometrías maestras de pétalo
     const tierConfigs = [
-      { tier: 1, width: 0.38, length: 0.88, cup: 0.40, curl: 0.35, reflex: 0.00, ruffle: 0.015 },
-      { tier: 2, width: 0.52, length: 1.05, cup: 0.34, curl: 0.22, reflex: 0.00, ruffle: 0.025 },
-      { tier: 3, width: 0.65, length: 1.25, cup: 0.28, curl: 0.12, reflex: 0.20, ruffle: 0.035 },
-      { tier: 4, width: 0.78, length: 1.42, cup: 0.22, curl: 0.32, reflex: 0.52, ruffle: 0.055 },
-      { tier: 5, width: 0.92, length: 1.58, cup: 0.16, curl: 0.42, reflex: 0.78, ruffle: 0.075 }
+      { tier: 1, width: 0.38, length: 0.46, cup: 0.40, curl: 0.35, reflex: 0.00, ruffle: 0.015 },
+      { tier: 2, width: 0.52, length: 0.55, cup: 0.34, curl: 0.22, reflex: 0.00, ruffle: 0.025 },
+      { tier: 3, width: 0.65, length: 0.64, cup: 0.28, curl: 0.12, reflex: 0.20, ruffle: 0.035 },
+      { tier: 4, width: 0.78, length: 0.72, cup: 0.22, curl: 0.12, reflex: 0.20, ruffle: 0.025 },
+      { tier: 5, width: 0.92, length: 0.78, cup: 0.16, curl: 0.15, reflex: 0.25, ruffle: 0.025 }
     ];
 
     tierConfigs.forEach(cfg => {
@@ -378,18 +371,18 @@ class FlowerInstance {
 
   initMaterial() {
     this.material = BotanicalPetalTextures.createBotanicalPetalMaterial(this.sharedTextures, {
-      normalScale: 0.95,
-      transmission: this.config.transmission,
+      normalScale: 0.18,
+      transmission: 0.0,
       thickness: 0.48,
       sheenColor: this.config.sheenColor
     });
 
     // Clonación ligera con tintes personalizados
-    this.material.color = new THREE.Color(this.config.tint);
+    this.material.color = new THREE.Color([0xc7a8e6, 0xefc4d9, 0xb59cd6, 0xdfb9e5, 0xd4c0eb, 0xe9c9df, 0xc9b4e2][this.index]);
     this.material.emissive = new THREE.Color(this.config.emissive);
-    this.material.emissiveIntensity = this.config.emissiveIntensity;
+    this.material.emissiveIntensity = 0.07;
     this.material.roughness = this.config.roughness;
-    this.material.clearcoat = this.config.clearcoat;
+    this.material.clearcoat = 0.08;
   }
 
   buildFlower() {
@@ -413,7 +406,7 @@ class FlowerInstance {
     this.headGroup.add(receptacle);
 
     // Luz local subsuperficial (SSS) dentro de cada flor
-    this.sssLight = new THREE.PointLight(this.config.sheenColor || 0xc084fc, 0.65, 1.4);
+    this.sssLight = new THREE.PointLight(this.config.sheenColor || 0xc084fc, 0.12, 1.4);
     this.sssLight.position.set(0, 0.25, 0);
     this.headGroup.add(this.sssLight);
 
@@ -450,8 +443,8 @@ class FlowerInstance {
           { tier: 1, count: 6, r: 0.05, y: 0.08, closedAngle: 0.10, openAngle: 0.22, scale: 0.60 },
           { tier: 2, count: 7, r: 0.12, y: 0.06, closedAngle: 0.18, openAngle: 0.45, scale: 0.78 },
           { tier: 3, count: 8, r: 0.22, y: 0.04, closedAngle: 0.25, openAngle: 0.75, scale: 0.95 },
-          { tier: 4, count: 9, r: 0.35, y: 0.02, closedAngle: 0.32, openAngle: 1.15, scale: 1.15 },
-          { tier: 5, count: 10, r: 0.48, y: 0.00, closedAngle: 0.38, openAngle: 1.48, scale: 1.35 }
+          { tier: 4, count: 9, r: 0.22, y: 0.02, closedAngle: 0.32, openAngle: 1.15, scale: 1.15 },
+          { tier: 5, count: 10, r: 0.28, y: 0.00, closedAngle: 0.38, openAngle: 1.48, scale: 1.35 }
         ];
 
     let globalPetalIndex = 0;
@@ -459,7 +452,7 @@ class FlowerInstance {
       const geom = this.geometryPool.getPetalGeometry(tCfg.tier);
 
       for (let i = 0; i < tCfg.count; i++) {
-        const azimuth = globalPetalIndex * GOLDEN_ANGLE;
+        const azimuth = (i / tCfg.count) * Math.PI * 2 + tCfg.tier * GOLDEN_ANGLE;
         const pivot = new THREE.Group();
         pivot.position.set(
           Math.sin(azimuth) * tCfg.r,
@@ -469,7 +462,7 @@ class FlowerInstance {
         pivot.rotation.y = azimuth;
 
         const mesh = new THREE.Mesh(geom, this.material);
-        mesh.scale.setScalar(tCfg.scale);
+        mesh.scale.setScalar(tCfg.scale * 0.70);
         mesh.rotation.x = tCfg.closedAngle;
 
         mesh.userData = {
@@ -492,41 +485,27 @@ class FlowerInstance {
   createStamens(count) {
     const group = new THREE.Group();
     group.position.set(0, 0.04, 0);
-
-    const carpels = new THREE.Mesh(
-      this.geometryPool.carpelGeometry,
-      new THREE.MeshStandardMaterial({ color: 0xd97706, emissive: 0x78350f, emissiveIntensity: 0.35, roughness: 0.42 })
-    );
-    group.add(carpels);
-
-    const antherMat = new THREE.MeshStandardMaterial({
-      color: 0xfde047,
-      emissive: 0xeab308,
-      emissiveIntensity: 0.75,
-      roughness: 0.28
-    });
-    const filamentMat = new THREE.LineBasicMaterial({ color: 0xfef08a });
-
+    const mat = new THREE.MeshStandardMaterial({ color: 0xe8cc8b, roughness: 0.7 });
+    group.add(new THREE.Mesh(this.geometryPool.carpelGeometry, mat));
+    const anthers = new THREE.InstancedMesh(this.geometryPool.antherGeometry, mat, count);
+    const dummy = new THREE.Object3D();
+    const vertices = [];
     for (let i = 0; i < count; i++) {
       const angle = i * GOLDEN_ANGLE;
       const radius = 0.035 + Math.sqrt(i / count) * 0.05;
-      const height = 0.065 + Math.random() * 0.035;
-
-      const curve = new THREE.QuadraticBezierCurve3(
-        new THREE.Vector3(Math.cos(angle) * 0.015, 0, Math.sin(angle) * 0.015),
-        new THREE.Vector3(Math.cos(angle) * radius * 0.55, height * 0.65, Math.sin(angle) * radius * 0.55),
-        new THREE.Vector3(Math.cos(angle) * radius, height, Math.sin(angle) * radius)
-      );
-
-      const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(6)), filamentMat);
-      group.add(line);
-
-      const anther = new THREE.Mesh(this.geometryPool.antherGeometry, antherMat);
-      anther.position.set(Math.cos(angle) * radius, height, Math.sin(angle) * radius);
-      anther.rotation.set(Math.random(), angle, Math.random());
-      group.add(anther);
+      const height = 0.065 + (Math.sin(i * 2.4) + 1) * 0.017;
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
+      vertices.push(0, 0, 0, x, height, z);
+      dummy.position.set(x, height, z);
+      dummy.rotation.set(i * 0.7, angle, i * 0.3);
+      dummy.updateMatrix();
+      anthers.setMatrixAt(i, dummy.matrix);
     }
-
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+    group.add(new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({ color: 0xe4ccaa })));
+    group.add(anthers);
     return group;
   }
 
@@ -544,7 +523,7 @@ class FlowerInstance {
     // Destello de emisión cromática viva
     this.material.emissiveIntensity = 0.95;
     setTimeout(() => {
-      this.material.emissiveIntensity = this.config.emissiveIntensity;
+      this.material.emissiveIntensity = 0.07;
     }, 450);
   }
 
@@ -651,10 +630,10 @@ class BotanicalBouquet {
 
     // 2. Follaje de eucalipto (plata glauco / menta cerosa)
     this.eucalyptusMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x4f7869,
+      color: 0x638e7b,
       roughness: 0.52,
       metalness: 0.02,
-      sheen: new THREE.Color(0xd1fae5).multiplyScalar(0.85),
+      sheen: new THREE.Color(0xd1fae5).multiplyScalar(0.08),
       clearcoat: 0.25,
       side: THREE.DoubleSide
     });
@@ -685,76 +664,13 @@ class BotanicalBouquet {
   buildBouquet() {
     // Composición Botánica 1+6: Domo Floral Armónico de 7 Flores
     const configs = [
-      {
-        pos: new THREE.Vector3(0.00, 0.48, 0.00),
-        rot: new THREE.Euler(0.12, 0.00, 0.00),
-        scale: 0.95,
-        isBud: false,
-        maxOpen: 1.00,
-        bloomStart: 0.00,
-        bloomEnd: 0.50,
-        phase: 0.0
-      },
-      {
-        pos: new THREE.Vector3(0.00, 0.32, 0.52),
-        rot: new THREE.Euler(0.42, 0.00, 0.00),
-        scale: 0.85,
-        isBud: false,
-        maxOpen: 1.00,
-        bloomStart: 0.15,
-        bloomEnd: 0.65,
-        phase: 1.2
-      },
-      {
-        pos: new THREE.Vector3(0.46, 0.34, 0.26),
-        rot: new THREE.Euler(0.32, -0.38, -0.28),
-        scale: 0.82,
-        isBud: false,
-        maxOpen: 1.00,
-        bloomStart: 0.22,
-        bloomEnd: 0.72,
-        phase: 2.1
-      },
-      {
-        pos: new THREE.Vector3(-0.46, 0.34, 0.26),
-        rot: new THREE.Euler(0.32, 0.38, 0.28),
-        scale: 0.82,
-        isBud: false,
-        maxOpen: 1.00,
-        bloomStart: 0.28,
-        bloomEnd: 0.78,
-        phase: 3.2
-      },
-      {
-        pos: new THREE.Vector3(0.48, 0.40, -0.26),
-        rot: new THREE.Euler(-0.24, -0.48, -0.28),
-        scale: 0.80,
-        isBud: false,
-        maxOpen: 0.98,
-        bloomStart: 0.35,
-        bloomEnd: 0.85,
-        phase: 4.3
-      },
-      {
-        pos: new THREE.Vector3(-0.48, 0.40, -0.26),
-        rot: new THREE.Euler(-0.24, 0.48, 0.28),
-        scale: 0.80,
-        isBud: false,
-        maxOpen: 0.98,
-        bloomStart: 0.40,
-        bloomEnd: 0.90,
-        phase: 5.1
-      },
-      {
-        pos: new THREE.Vector3(0.00, 0.45, -0.46),
-        rot: new THREE.Euler(-0.38, 0.00, 0.00),
-        scale: 0.84,
-        isBud: false,
-        maxOpen: 0.96,
-        bloomStart: 0.45,
-        bloomEnd: 0.96,
-        phase: 6.0
-      }
+      { pos: new THREE.Vector3(0, 0.92, -0.08), rot: new THREE.Euler(0.1, 0, 0), scale: 0.9, isBud: false, maxOpen: 1, bloomStart: 0.000, bloomEnd: 0.550, phase: 0.0 },
+      { pos: new THREE.Vector3(0, 0.55, 0.88), rot: new THREE.Euler(0.48, 0, 0), scale: 0.52, isBud: false, maxOpen: 1, bloomStart: 0.055, bloomEnd: 0.615, phase: 1.2 },
+      { pos: new THREE.Vector3(0.87, 0.52, 0.22), rot: new THREE.Euler(0.32, -0.35, -0.22), scale: 0.60, isBud: false, maxOpen: 1, bloomStart: 0.110, bloomEnd: 0.680, phase: 2.4 },
+      { pos: new THREE.Vector3(-0.87, 0.52, 0.22), rot: new THREE.Euler(0.32, 0.35, 0.22), scale: 0.60, isBud: false, maxOpen: 1, bloomStart: 0.165, bloomEnd: 0.745, phase: 3.5999999999999996 },
+      { pos: new THREE.Vector3(0.7, 0.76, -0.66), rot: new THREE.Euler(-0.12, -0.35, -0.22), scale: 0.54, isBud: false, maxOpen: 1, bloomStart: 0.220, bloomEnd: 0.810, phase: 4.8 },
+      { pos: new THREE.Vector3(-0.7, 0.76, -0.66), rot: new THREE.Euler(-0.12, 0.35, 0.22), scale: 0.54, isBud: false, maxOpen: 1, bloomStart: 0.275, bloomEnd: 0.875, phase: 6.0 },
+      { pos: new THREE.Vector3(0, 1.1, -0.91), rot: new THREE.Euler(-0.2, 0, 0), scale: 0.54, isBud: false, maxOpen: 1, bloomStart: 0.330, bloomEnd: 0.940, phase: 7.199999999999999 },
     ];
 
     // 1. Construir las 7 Flores y sus tallos convergentes
@@ -771,6 +687,7 @@ class BotanicalBouquet {
 
     // 2. Follaje de relleno botánico
     this.createEucalyptusFoliage();
+    this.createPearlSprigs();
     this.createRoseLeafCollar();
 
     // 3. Atado de seda con lazo 3D
@@ -831,7 +748,7 @@ class BotanicalBouquet {
       );
       this.foliageGroup.add(stemMesh);
 
-      const leafGeom = new THREE.CircleGeometry(0.12, 12);
+      const leafGeom = new THREE.CircleGeometry(0.095, 16);
       leafGeom.scale(1.0, 1.25, 1.0);
 
       for (let k = 1; k <= bCfg.count; k++) {
@@ -854,6 +771,30 @@ class BotanicalBouquet {
         });
       }
     });
+  }
+
+  createPearlSprigs() {
+    const pearl = new THREE.SphereGeometry(0.026, 7, 5);
+    const petalMat = new THREE.MeshStandardMaterial({ color: 0xffe8df, roughness: 0.72 });
+    const branchMat = new THREE.LineBasicMaterial({ color: 0x789481 });
+    const pearls = new THREE.InstancedMesh(pearl, petalMat, 140);
+    const dummy = new THREE.Object3D();
+    let pearlIndex = 0;
+    for (let branch = 0; branch < 7; branch++) {
+      const angle = branch / 7 * Math.PI * 2 + 0.3;
+      const end = new THREE.Vector3(Math.cos(angle) * 1.27, 0.57 + (branch % 3) * 0.11, Math.sin(angle) * 1.15);
+      const base = this.bindPoint.clone();
+      for (let tip = 0; tip < 4; tip++) {
+        const flower = end.clone().add(new THREE.Vector3(Math.sin(tip * 2.4 + branch) * 0.14, tip * 0.07, Math.cos(tip * 2.4) * 0.12));
+        this.foliageGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([base, end, flower]), branchMat));
+        for (let k = 0; k < 5; k++) {
+          dummy.position.copy(flower).add(new THREE.Vector3(Math.cos(k * 1.256) * 0.025, Math.sin(k * 1.256) * 0.025, 0));
+          dummy.updateMatrix();
+          pearls.setMatrixAt(pearlIndex++, dummy.matrix);
+        }
+      }
+    }
+    this.foliageGroup.add(pearls);
   }
 
   createRoseLeafCollar() {
@@ -1006,11 +947,12 @@ class RealisticBouquetScene {
     // 2. Cámara encuadrada para el ramo floral completo (perspectiva botánica elevada)
     this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 50);
     const aspect = width / height;
-    const isMobile = aspect < 0.75;
-    const targetZ = isMobile ? 5.6 : 4.4;
-    const targetY = isMobile ? 1.40 : 1.15;
+    const isMobile = width <= 760;
+    const targetZ = isMobile ? 9.8 : 5.8;
+    const targetY = isMobile ? 3.8 : 2.35;
     this.camera.position.set(0, targetY, targetZ);
     this.camera.lookAt(0, 0.05, 0);
+    this.camera.setViewOffset(width, height, isMobile ? 0 : width * 0.21, isMobile ? height * 0.12 : -height * 0.04, width, height);
 
     // 3. Renderizador WebGL
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -1020,10 +962,10 @@ class RealisticBouquetScene {
 
     // 4. Atmósfera cinematográfica PMREM y luz SSS interna en el corazón del ramo
     this.atmosphere = new BotanicalAtmosphere(this.scene, this.renderer, {
-      exposure: 1.20,
-      keyIntensity: 2.6,
-      rimIntensity: 4.6,
-      internalGlowIntensity: 2.5
+      exposure: 1.12,
+      keyIntensity: 2.05,
+      rimIntensity: 1.8,
+      internalGlowIntensity: 0.35
     });
 
     // Posicionar luz SSS interna justo en el centro del domo floral
@@ -1042,8 +984,10 @@ class RealisticBouquetScene {
       autoBloom: true,
       scale: 1.0
     });
-    this.bouquet.group.position.set(0, -0.45, 0);
+    this.bouquet.group.position.set(0, -0.15, 0);
     this.scene.add(this.bouquet.group);
+    const fill = new THREE.HemisphereLight(0xf3d9ef, 0x372146, 0.65);
+    this.scene.add(fill);
 
     // 7. Polen flotante
     this.setupPollen();
@@ -1078,11 +1022,20 @@ class RealisticBouquetScene {
     const geom = new THREE.BufferGeometry();
     geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
+    const sprite = document.createElement('canvas');
+    sprite.width = sprite.height = 32;
+    const ctx = sprite.getContext('2d');
+    const halo = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+    halo.addColorStop(0, 'rgba(255,255,255,1)');
+    halo.addColorStop(0.2, 'rgba(255,255,255,.65)');
+    halo.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = halo; ctx.fillRect(0, 0, 32, 32);
     const mat = new THREE.PointsMaterial({
-      size: 0.045,
-      color: new THREE.Color(0xfde047),
+      map: new THREE.CanvasTexture(sprite),
+      size: 0.024,
+      color: new THREE.Color(0xe8cba4),
       transparent: true,
-      opacity: 0.75,
+      opacity: 0.45,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
@@ -1131,11 +1084,12 @@ class RealisticBouquetScene {
       const height = window.innerHeight;
       this.camera.aspect = width / height;
       const aspect = width / height;
-      const isMobile = aspect < 0.75;
-      const targetZ = isMobile ? 5.6 : 4.4;
-      const targetY = isMobile ? 1.40 : 1.15;
+      const isMobile = width <= 760;
+      const targetZ = isMobile ? 9.8 : 5.8;
+      const targetY = isMobile ? 3.8 : 2.35;
       this.camera.position.set(0, targetY, targetZ);
       this.camera.lookAt(0, 0.05, 0);
+    this.camera.setViewOffset(width, height, isMobile ? 0 : width * 0.21, isMobile ? height * 0.12 : -height * 0.04, width, height);
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(width, height);
     });
