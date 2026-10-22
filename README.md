@@ -4,6 +4,18 @@ Jardín interactivo en tonos lavanda y rosa, con siete flores 3D de inspiración
 
 Sitio: https://franduxs.github.io/flores-moradas/
 
+## Carta con foto y video
+
+La carta de Yadi incluye la fotografía facilitada por el usuario, presentada como una impresión sobre papel marfil. El panel se puede ampliar para leer sin prisa; Escape vuelve al jardín.
+
+«Un instante para ti» descubre el video, sin reproducción automática. Su archivo se carga solo al abrir el detalle. La reproducción suspende el contexto musical, conservando su posición; al pausar vuelve al estado musical anterior. Ocultar el video o plegar la carta detiene la reproducción.
+
+Archivos en `assets/`: fotografía original JPEG (195.218 bytes), video web H.264/AAC (2.722.603 bytes, 478×270, 30 fps, 12,985 s) y póster. El video de origen medía 9.026.515 bytes y 478×850; la copia web retira únicamente sus franjas negras superiores/inferiores, detectadas a lo largo del clip. Los originales en Downloads no se modificaron.
+
+Verificación: imagen cargada a 1600 px, reproducción real del MP4, controles visibles en móvil, carga diferida y coordinación de audio comprobadas con Playwright; cuatro tamaños sin desbordamiento; cero errores/avisos de consola. Texto visible sin referencias a Moni.
+
+Referencias: [video HTML según MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video) y [carga diferida de video en web.dev](https://web.dev/articles/lazy-loading-video?hl=en).
+
 ## Experiencia
 
 - Floración progresiva, giro táctil y acordes al tocar las flores.

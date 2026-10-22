@@ -317,7 +317,7 @@
         this.masterGain.connect(this.ctx.destination);
       }
 
-      if (this.ctx.state === 'suspended') {
+      if (this.ctx.state === 'suspended' && !this.mediaActive) {
         this.ctx.resume();
       }
     }

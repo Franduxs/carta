@@ -680,3 +680,48 @@ body { background: radial-gradient(ellipse at 30% 42%, #30203b 0%, #170d23 42%, 
  .garden-heading p { font-size: .45rem; }
  .touch-hint { display: none; }
 }
+
+/* Una carta con fotografía y un pequeño detalle que se descubre al leer. */
+.bottom-card-wrapper { max-width: 540px; width: 39vw; }
+.card-pill-header { gap: .65rem; }
+.pill-titles { flex: 1; }
+.reading-toggle { background: transparent; border: 1px solid #d3b1cd55; color: #edcddd; border-radius: 50%; width: 34px; height: 34px; font-size: 1.25rem; cursor: pointer; flex-shrink: 0; }
+.expand-btn { flex-shrink: 0; }
+.glass-card.expanded .card-content { background: linear-gradient(135deg, #f7eee5, #ede0d8); padding: 1.3rem 1.6rem 1.5rem; gap: 1.15rem; color: #493449; }
+.letter-eyebrow { color: #8e6b82; text-transform: uppercase; font-size: .55rem; letter-spacing: .25em; text-align: center; margin-top: .25rem; }
+.letter-photograph { width: min(100%, 260px); align-self: center; background: #fffbf5; padding: 8px 8px 12px; transform: rotate(-2deg); box-shadow: 0 5px 18px #50324626; margin: .3rem 0 .5rem; }
+.letter-photograph img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; }
+.letter-photograph figcaption { font-family: var(--font-hand); color: #805a70; text-align: center; font-size: 1.1rem; margin-top: .55rem; }
+.card-content .text-lead { color: #432d44; }
+.card-content .text-body { color: #624c60; opacity: 1; line-height: 1.9; }
+.card-content .highlight-line { border-color: #b4849b; background: #b4849b0b; }
+.card-content .highlight-line span { color: #77536b; }
+.card-content .card-footer { border-color: #ad899a44; }
+.card-content .signature .from { color: #705569; }
+.card-content .signature .author { color: #986681; }
+.letter-keepsake { border-top: 1px solid #bda0ad88; border-bottom: 1px solid #bda0ad88; margin: .25rem 0; }
+.letter-keepsake summary { display: flex; align-items: center; gap: .8rem; cursor: pointer; padding: 1rem 0; list-style: none; color: #61425b; font-family: var(--font-serif); font-size: 1rem; }
+.letter-keepsake summary::-webkit-details-marker { display: none; }
+.keepsake-icon { border: 1px solid #b68ca3; border-radius: 50%; width: 34px; height: 34px; display: grid; place-items: center; flex-shrink: 0; }
+.letter-keepsake summary small { display: block; color: #8d7080; font-family: var(--font-body); font-size: .65rem; margin-top: .25rem; }
+.keepsake-plus { margin-left: auto; font-family: var(--font-body); transition: transform .3s; }
+.letter-keepsake[open] .keepsake-plus { transform: rotate(45deg); }
+.keepsake-content { padding-bottom: 1rem; }
+.keepsake-content p { color: #745c6e; font-size: .78rem; line-height: 1.7; margin-bottom: .75rem; }
+.keepsake-content video { display: block; width: 100%; max-height: 45dvh; aspect-ratio: 478 / 270; object-fit: contain; background: #17101b; border-radius: 10px; }
+.keepsake-content .video-note { margin: .6rem 0 0; font-size: .64rem; color: #8a707f; }
+.video-error a { color: #61425b; }
+.bottom-card-wrapper.reading-mode { position: fixed; inset: 70px 20px 20px; width: min(640px, calc(100vw - 40px)); max-width: none; margin: auto; transform: none; z-index: 70; }
+.reading-mode .glass-card { height: 100%; display: flex; flex-direction: column; box-shadow: 0 25px 120px #000a; }
+.reading-mode .card-pill-header { flex-shrink: 0; }
+.reading-mode .glass-card.expanded .card-content { flex: 1; min-height: 0; max-height: none; }
+.reading-mode .letter-photograph { width: min(100%, 340px); }
+button:focus-visible, summary:focus-visible, a:focus-visible, video:focus-visible { outline: 2px solid #c48aab; outline-offset: 4px; }
+@media (max-width: 760px) {
+ .bottom-card-wrapper { width: auto; max-width: none; }
+ .glass-card.expanded .card-content { max-height: 38dvh; padding: 1.1rem 1.15rem 1.3rem; }
+ .letter-photograph { width: 190px; }
+ .reading-mode .glass-card.expanded .card-content { max-height: none; }
+ .bottom-card-wrapper.reading-mode { inset: max(65px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); width: calc(100vw - 24px); }
+ .card-title { font-size: 1.17rem; }
+}

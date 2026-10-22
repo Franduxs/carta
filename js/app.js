@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Despertar AudioContext con primer gesto del usuario
   ['pointerdown', 'touchstart', 'click'].forEach((evt) => {
     window.addEventListener(evt, () => {
-      if (window.soundEngine && window.soundEngine.ctx && window.soundEngine.ctx.state === 'suspended') {
+      if (window.soundEngine && !window.soundEngine.mediaActive && window.soundEngine.ctx && window.soundEngine.ctx.state === 'suspended') {
         window.soundEngine.ctx.resume();
       }
     }, { once: true });
@@ -197,4 +197,88 @@ document.addEventListener('DOMContentLoaded', () => {
     noteCard.classList.add('expanded');
     if (touchHint) touchHint.style.opacity = '0';
   }
+});
+
+// La foto y el video viven dentro de la carta; el jardín sigue siendo su fondo.
+document.addEventListener('DOMContentLoaded', () => {
+  const wrapper = document.querySelector('.bottom-card-wrapper');
+  const note = document.getElementById('noteCard');
+  const reader = document.getElementById('btnReadingMode');
+  const keepsake = document.getElementById('videoKeepsake');
+  const video = document.getElementById('letterVideo');
+  const error = document.getElementById('videoError');
+  if (!wrapper || !reader || !video || !keepsake) return;
+
+  function setReadingMode(active) {
+    wrapper.classList.toggle('reading-mode', active);
+    reader.setAttribute('aria-pressed', String(active));
+    reader.setAttribute('aria-label', active ? 'Volver al jardín' : 'Ampliar carta');
+    reader.title = active ? 'Volver al jardín' : 'Leer sin prisa';
+    if (active) note.classList.add('expanded');
+  }
+  reader.addEventListener('click', (event) => {
+    event.stopPropagation();
+    setReadingMode(!wrapper.classList.contains('reading-mode'));
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && wrapper.classList.contains('reading-mode')) {
+      video.pause();
+      setReadingMode(false);
+      reader.focus();
+    }
+  });
+
+  keepsake.addEventListener('toggle', () => {
+    if (keepsake.open) {
+      setReadingMode(true);
+      const source = video.querySelector('source');
+      if (!source.hasAttribute('src')) {
+        source.src = source.dataset.src;
+        video.load();
+      }
+      requestAnimationFrame(() => video.scrollIntoView({ block: 'nearest', behavior: 'auto' }));
+    } else {
+      video.pause();
+    }
+  });
+
+  // Suspender congela la posición musical y silencia también notas pendientes.
+  // Una cola serial evita carreras entre play/pause rápidos del video.
+  let audioTransition = Promise.resolve();
+  function syncAudio() {
+    const engine = window.soundEngine;
+    if (!engine) return;
+    engine.mediaActive = !video.paused && !video.ended;
+    audioTransition = audioTransition.catch(() => {}).then(async () => {
+      if (!engine.ctx || engine.ctx.state === 'closed') return;
+      if (engine.mediaActive || document.hidden) {
+        if (engine.ctx.state === 'running') await engine.ctx.suspend();
+      } else if (engine.ctx.state === 'suspended') {
+        await engine.ctx.resume();
+      }
+    }).catch(() => {});
+  }
+  video.addEventListener('play', syncAudio);
+  video.addEventListener('pause', syncAudio);
+  video.addEventListener('ended', syncAudio);
+  video.addEventListener('error', () => { error.hidden = false; video.pause(); syncAudio(); });
+  video.querySelector('source').addEventListener('error', () => { error.hidden = false; video.pause(); syncAudio(); });
+  // Otra interacción devuelve el control al jardín antes de ejecutar su audio.
+  document.addEventListener('pointerdown', (event) => {
+    if (!video.paused && event.target !== video && (!event.target.closest('.glass-card') || event.target.closest('button'))) video.pause();
+  }, true);
+  document.addEventListener('click', (event) => {
+    if (!video.paused && event.target !== video && event.target.closest('button')) video.pause();
+  }, true);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) video.pause();
+    syncAudio();
+  });
+  new MutationObserver(() => {
+    document.getElementById('btnToggleArrow').setAttribute('aria-expanded', String(note.classList.contains('expanded')));
+    if (!note.classList.contains('expanded')) {
+      video.pause();
+      setReadingMode(false);
+    }
+  }).observe(note, { attributes: true, attributeFilter: ['class'] });
 });

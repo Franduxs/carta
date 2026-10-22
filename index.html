@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="css/style.css?v=jardin-yadi-2">
+  <link rel="stylesheet" href="css/style.css?v=carta-yadi-3">
   
   <!-- Three.js (Usa copia local optimizada con fallback a CDN) -->
   <script src="three.min.js"></script>
@@ -122,12 +122,18 @@
             <h1 class="card-title">Para ti, Yadi 💜</h1>
             <p class="card-subtitle">Una carta escrita con cariño</p>
           </div>
-          <button class="expand-btn" aria-label="Abrir o cerrar nota" id="btnToggleArrow">
+          <button class="reading-toggle" id="btnReadingMode" aria-label="Ampliar carta" aria-pressed="false" title="Leer sin prisa">⤢</button>
+          <button class="expand-btn" aria-label="Abrir o cerrar nota" id="btnToggleArrow" aria-expanded="true" aria-controls="cardContent">
             <svg viewBox="0 0 24 24" class="arrow-svg"><path d="M7 14l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
           </button>
         </div>
 
         <div class="card-content" id="cardContent">
+          <p class="letter-eyebrow">Unas palabras, solo para ti</p>
+          <figure class="letter-photograph">
+            <img src="assets/sonrisa-yadi.jpg" width="1600" height="1200" alt="Un retrato sonriente iluminado por el sol" decoding="async">
+            <figcaption>Una sonrisa entre estas líneas.</figcaption>
+          </figure>
           <p class="text-lead">
             Yadi, esta carta y estas flores son para ti.
           </p>
@@ -143,6 +149,19 @@
           <p class="text-body">
             Te dejo estas flores que no se marchitan y un poquito de música para acompañar la lectura. Espero haberte sacado una sonrisa, Yadi. Este detalle va con mucho cariño.
           </p>
+
+          <details class="letter-keepsake" id="videoKeepsake">
+            <summary><span class="keepsake-icon" aria-hidden="true">▷</span><span>Un instante para ti<small>Abre este pequeño detalle</small></span><span class="keepsake-plus" aria-hidden="true">+</span></summary>
+            <div class="keepsake-content">
+              <p>También quería dejarte este instante, para acompañar estas palabras.</p>
+              <video id="letterVideo" controls playsinline preload="none" poster="assets/instante-poster.jpg" aria-label="Un instante para Yadi">
+                <source data-src="assets/instante-yadi.mp4" type="video/mp4">
+                Tu navegador no puede reproducir este video. <a href="assets/instante-yadi.mp4">Abrir video</a>.
+              </video>
+              <p class="video-note">Tú eliges cuándo darle play. La música del jardín espera.</p>
+              <p id="videoError" class="video-error" hidden>No se pudo cargar el video. <a href="assets/instante-yadi.mp4">Puedes abrirlo aquí</a>.</p>
+            </div>
+          </details>
 
           <footer class="card-footer">
             <div class="signature">
@@ -163,10 +182,10 @@
   </div>
 
   <!-- Scripts modulares -->
-  <script src="js/audio.js"></script>
-  <script src="js/botanicalTextures.js?v=jardin-yadi-2"></script>
+  <script src="js/audio.js?v=carta-yadi-3"></script>
+  <script src="js/botanicalTextures.js?v=carta-yadi-3"></script>
   <script src="js/botanicalAtmosphere.js"></script>
-  <script src="js/flower3d.js?v=jardin-yadi-2"></script>
-  <script src="js/app.js"></script>
+  <script src="js/flower3d.js?v=carta-yadi-3"></script>
+  <script src="js/app.js?v=carta-yadi-3"></script>
 </body>
 </html>
