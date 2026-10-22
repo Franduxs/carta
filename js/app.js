@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.stopPropagation();
       hugsCount++;
       if (hugCountLabel) {
-        hugCountLabel.textContent = `Abacito (${hugsCount})`;
+        hugCountLabel.textContent = `Abracito (${hugsCount})`;
       }
 
       // Sonido dulce de abrazo
