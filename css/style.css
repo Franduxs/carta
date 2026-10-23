@@ -721,6 +721,7 @@ body { background: radial-gradient(ellipse at 30% 42%, #30203b 0%, #170d23 42%, 
 .song-shortcut { display: flex; align-items: center; gap: .65rem; padding: .55rem .9rem; color: #efdae9; border: 1px solid #d3b1cd44; background: #24172cbb; border-radius: 30px; font: .74rem var(--font-body); text-align: left; cursor: pointer; }
 .song-shortcut small { display: block; color: #bfa6bf; font-size: .55rem; margin-top: .1rem; }
 .song-shortcut.is-playing { box-shadow: 0 0 20px #c48aab33; border-color: #c48aab; }
+.song-shortcut.needs-touch { border-color: #d5a4bd; background: #4d2f49; }
 .letter-song { border: 1px solid #c8a9ba77; border-radius: 12px; padding: .85rem; background: #fffbf555; }
 .letter-song summary { cursor: pointer; display: flex; align-items: center; gap: .75rem; color: #735068; font: .95rem var(--font-serif); list-style: none; }
 .letter-song summary::-webkit-details-marker { display: none; }

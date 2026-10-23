@@ -10,8 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let loading = false;
   let videoActive = false;
   let resumeAfterVideo = false;
+  let autoPending = true;
+  let initialOpen = true;
 
   function pause() {
+    autoPending = false;
     resumeAfterVideo = false;
     if (ready) player.pauseVideo();
   }
@@ -37,14 +40,15 @@ document.addEventListener('DOMContentLoaded', () => {
     player = new YT.Player('officialSongPlayer', {
       host: 'https://www.youtube-nocookie.com',
       width: '100%', height: '240', videoId: 'bRfMwoIizTQ',
-      playerVars: { origin: location.origin, playsinline: 1, rel: 0, autoplay: 0, loop: 1, playlist: 'bRfMwoIizTQ' },
+      playerVars: { origin: location.origin, playsinline: 1, rel: 0, autoplay: 1, loop: 1, playlist: 'bRfMwoIizTQ' },
       events: {
         onReady(event) {
           ready = true;
           const iframe = event.target.getIframe();
           iframe.title = 'A Little Death — The Neighbourhood, reproductor oficial';
           iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
-          status.textContent = 'Toca reproducir para acompañar la lectura.';
+          status.textContent = 'Preparando la canción para acompañar la lectura…';
+          if (autoPending && panel.open && !document.hidden && video.paused) event.target.playVideo();
         },
         onStateChange(event) {
           shortcut.classList.toggle('is-playing', event.data === 1);
@@ -59,12 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
               return;
             }
             resumeAfterVideo = false;
+            autoPending = false;
+            shortcut.classList.remove('needs-touch');
+            shortcut.querySelector('small').textContent = 'The Neighbourhood';
             status.textContent = 'A Little Death · The Neighbourhood';
           } else if (event.data === 2) {
             status.textContent = videoActive ? 'La canción espera mientras ves el video.' : 'Toca reproducir para continuar.';
           }
         },
-        onAutoplayBlocked() { status.textContent = 'Toca reproducir en YouTube para continuar la canción.'; },
+        onAutoplayBlocked() {
+          status.textContent = 'Toca la carta o el botón de música para activar el sonido.';
+          shortcut.classList.add('needs-touch');
+          shortcut.querySelector('small').textContent = 'Toca para activar música';
+        },
         onError(event) {
           status.dataset.playerError = String(event.data);
           panel.classList.add('song-unavailable');
@@ -87,18 +98,35 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(script);
   }
   panel.addEventListener('toggle', () => {
+    if (initialOpen) { initialOpen = false; return; }
     if (panel.open) {
+      autoPending = true;
       const reader = document.getElementById('btnReadingMode');
       if (reader.getAttribute('aria-pressed') !== 'true') reader.click();
       loadPlayer();
+      if (ready && video.paused && !document.hidden) player.playVideo();
       requestAnimationFrame(() => panel.scrollIntoView({ block: 'start', behavior: 'auto' }));
     } else pause();
   });
   shortcut.addEventListener('click', () => {
+    autoPending = true;
     panel.open = true;
+    if (ready && video.paused && !document.hidden) player.playVideo();
     const reader = document.getElementById('btnReadingMode');
     if (reader.getAttribute('aria-pressed') !== 'true') reader.click();
     panel.scrollIntoView({ block: 'start', behavior: 'auto' });
   });
+  // Si el navegador bloquea el inicio con sonido, usar el primer gesto real.
+  function startOnGesture(event) {
+    if (!autoPending || !ready || !panel.open || document.hidden || !video.paused) return;
+    if (event.target.closest('video, .letter-clip, #videoKeepsake, #cardToggle, #letterSong summary')) return;
+    player.playVideo();
+  }
+  document.addEventListener('pointerdown', startOnGesture);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') startOnGesture(event);
+  });
   document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+  panel.open = true;
+  loadPlayer();
 });

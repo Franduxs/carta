@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="css/style.css?v=carta-yadi-6">
+  <link rel="stylesheet" href="css/style.css?v=carta-yadi-7">
   
   <!-- Three.js (Usa copia local optimizada con fallback a CDN) -->
   <script src="three.min.js"></script>
@@ -84,6 +84,14 @@
 
         <div class="card-content" id="cardContent">
           <p class="letter-eyebrow">Unas palabras, solo para ti</p>
+          <details class="letter-song" id="letterSong">
+            <summary><span aria-hidden="true">♫</span><span>Una canción para esta carta<small>A Little Death · The Neighbourhood</small></span></summary>
+            <div class="song-content">
+              <div id="officialSongPlayer"></div>
+              <p class="song-status" id="songStatus" role="status">Cargando el reproductor oficial…</p>
+              <a class="song-external" href="https://www.youtube.com/watch?v=bRfMwoIizTQ" target="_blank" rel="noopener noreferrer">Escuchar en YouTube ↗</a>
+            </div>
+          </details>
           <figure class="letter-photograph">
             <img src="assets/sonrisa-yadi.jpg" width="1600" height="1200" alt="Un retrato sonriente iluminado por el sol" decoding="async">
             <figcaption>Una sonrisa entre estas líneas.</figcaption>
@@ -96,14 +104,7 @@
             Quería dedicarte unas palabras y regalarte un momento bonito. A veces un detalle pequeño basta para cambiarle el ritmo al día, y ojalá este sea uno de esos detalles para ti.
           </p>
 
-          <details class="letter-song" id="letterSong">
-            <summary><span aria-hidden="true">♫</span><span>Una canción para esta carta<small>A Little Death · The Neighbourhood</small></span></summary>
-            <div class="song-content">
-              <div id="officialSongPlayer"></div>
-              <p class="song-status" id="songStatus" role="status">Cargando el reproductor oficial…</p>
-              <a class="song-external" href="https://www.youtube.com/watch?v=bRfMwoIizTQ" target="_blank" rel="noopener noreferrer">Escuchar en YouTube ↗</a>
-            </div>
-          </details>
+
 
           <div class="highlight-line">
             <span>Ojalá hoy encuentres razones para sonreír, un ratito de calma y algo que te haga ilusión. Que esta carta te acompañe como un pequeño recordatorio de que mereces cosas bonitas.</span>
@@ -160,10 +161,10 @@
   </div>
 
   <!-- Scripts modulares -->
-  <script src="js/music.js?v=carta-yadi-6"></script>
-  <script src="js/botanicalTextures.js?v=carta-yadi-6"></script>
+  <script src="js/music.js?v=carta-yadi-7"></script>
+  <script src="js/botanicalTextures.js?v=carta-yadi-7"></script>
   <script src="js/botanicalAtmosphere.js"></script>
-  <script src="js/flower3d.js?v=carta-yadi-6"></script>
-  <script src="js/app.js?v=carta-yadi-6"></script>
+  <script src="js/flower3d.js?v=carta-yadi-7"></script>
+  <script src="js/app.js?v=carta-yadi-7"></script>
 </body>
 </html>

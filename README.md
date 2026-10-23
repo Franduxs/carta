@@ -12,7 +12,7 @@ La carta de Yadi incluye la fotografía facilitada por el usuario, presentada co
 
 ### A Little Death — The Neighbourhood
 
-Por elección del usuario, se sustituyó la música sintetizada por el reproductor oficial de YouTube. No se descarga ni se aloja una copia de la canción. Se carga la API solo al abrir el apartado musical y se exige reproducción manual. El controlador pausa la canción cuando empieza un clip y la continúa después si estaba sonando; cerrar el apartado o esconder la página la pausa.
+Por elección del usuario, se sustituyó la música sintetizada por el reproductor oficial de YouTube. No se descarga ni se aloja una copia de la canción. El reproductor se muestra al principio de la carta e intenta iniciar con sonido al cargar. Cuando el navegador bloquea autoplay, se reintenta con el primer gesto del usuario y se destaca el botón de música. No se puede garantizar autoplay con sonido sin interacción. Tras una pausa deliberada no se reinicia por toques casuales. El controlador pausa la canción cuando empieza un clip y la continúa después si estaba sonando; cerrar el apartado o esconder la página la pausa.
 
 Comprobación: las publicaciones oficiales devolvieron error 150 en localhost, pero `bRfMwoIizTQ` sí se reprodujo desde el dominio público GitHub Pages. Se verificaron los estados de reproducción, pausa al iniciar un clip y continuación al pausarlo. YouTube mostró publicidad antes de la canción; sus controles y disponibilidad dependen del proveedor. Ante errores se oculta el marco fallido y se conserva el enlace oficial. No hace falta un archivo local para esta versión. Referencia: [API oficial de YouTube](https://developers.google.com/youtube/iframe_api_reference).
 
