@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="css/style.css?v=carta-yadi-3">
+  <link rel="stylesheet" href="css/style.css?v=carta-yadi-5">
   
   <!-- Three.js (Usa copia local optimizada con fallback a CDN) -->
   <script src="three.min.js"></script>
@@ -52,55 +52,9 @@
       <div class="badge">UN DETALLE PARA TI</div>
 
       <!-- Music Player Widget -->
-      <div class="music-player-pill" id="musicPlayerWidget">
-        
-        <!-- Botón Selector Desplegable -->
-        <button class="track-btn" id="btnTrackSelector" title="Seleccionar canción linda" aria-label="Elegir canción">
-          <span class="track-icon" id="playerTrackIcon">💜</span>
-          <span class="track-name" id="playerTrackTitle">Golden Hour</span>
-          <svg class="chevron-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-        </button>
-
-        <!-- Controles Play y Siguiente -->
-        <div class="player-actions">
-          <button id="btnPlayerPlay" class="action-btn play-pause-btn" aria-label="Reproducir o pausar" title="Reproducir / Pausar">
-            <svg class="icon-play" viewBox="0 0 24 24"><polygon points="7,5 19,12 7,19" fill="currentColor"/></svg>
-            <svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="currentColor"/><rect x="14" y="5" width="4" height="14" fill="currentColor"/></svg>
-          </button>
-          <button id="btnPlayerNext" class="action-btn next-track-btn" aria-label="Siguiente canción" title="Siguiente canción linda">
-            <svg viewBox="0 0 24 24"><polygon points="6,5 15,12 6,19" fill="currentColor"/><rect x="16" y="5" width="3" height="14" fill="currentColor"/></svg>
-          </button>
-        </div>
-
-        <!-- Menú Pop-up Desplegable de Canciones -->
-        <div class="track-menu-popover" id="trackMenuPopover">
-          <div class="menu-title">Canciones Lindas 💜</div>
-          <div class="track-menu-list">
-            <button class="menu-track-option active" data-index="0">
-              <span class="opt-icon">💜</span>
-              <div class="opt-info">
-                <span class="opt-name">Golden Hour / Atardecer Morado</span>
-                <span class="opt-desc">Piano romántico & arpegios suaves</span>
-              </div>
-            </button>
-            <button class="menu-track-option" data-index="1">
-              <span class="opt-icon">✨</span>
-              <div class="opt-info">
-                <span class="opt-name">Cajita de Recuerdos</span>
-                <span class="opt-desc">Celesta & campanas dulces</span>
-              </div>
-            </button>
-            <button class="menu-track-option" data-index="2">
-              <span class="opt-icon">🌙</span>
-              <div class="opt-info">
-                <span class="opt-name">Brisa de Medianoche</span>
-                <span class="opt-desc">Acordes etéreos & cálidos</span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-      </div>
+      <button type="button" class="song-shortcut" id="songShortcut" aria-label="Escuchar A Little Death de The Neighbourhood">
+        <span aria-hidden="true">♫</span><span>A Little Death<small>The Neighbourhood</small></span>
+      </button>
     </header>
 
     <!-- Indicador táctil flotante -->
@@ -142,6 +96,15 @@
             Quería dedicarte unas palabras y regalarte un momento bonito. A veces un detalle pequeño basta para cambiarle el ritmo al día, y ojalá este sea uno de esos detalles para ti.
           </p>
 
+          <details class="letter-song" id="letterSong">
+            <summary><span aria-hidden="true">♫</span><span>Una canción para esta carta<small>A Little Death · The Neighbourhood</small></span></summary>
+            <div class="song-content">
+              <div id="officialSongPlayer"></div>
+              <p class="song-status" id="songStatus" role="status">Cargando el reproductor oficial…</p>
+              <a class="song-external" href="https://www.youtube.com/watch?v=bRfMwoIizTQ" target="_blank" rel="noopener noreferrer">Escuchar en YouTube ↗</a>
+            </div>
+          </details>
+
           <div class="highlight-line">
             <span>Ojalá hoy encuentres razones para sonreír, un ratito de calma y algo que te haga ilusión. Que esta carta te acompañe como un pequeño recordatorio de que mereces cosas bonitas.</span>
           </div>
@@ -151,14 +114,29 @@
           </p>
 
           <details class="letter-keepsake" id="videoKeepsake">
-            <summary><span class="keepsake-icon" aria-hidden="true">▷</span><span>Un instante para ti<small>Abre este pequeño detalle</small></span><span class="keepsake-plus" aria-hidden="true">+</span></summary>
+            <summary><span class="keepsake-icon" aria-hidden="true">▷</span><span>Pequeños instantes para ti<small>Cuatro videos entre estas líneas</small></span><span class="keepsake-plus" aria-hidden="true">+</span></summary>
             <div class="keepsake-content">
-              <p>También quería dejarte este instante, para acompañar estas palabras.</p>
+              <p>También quería dejarte estos pequeños instantes, para acompañar estas palabras. Elige uno y míralo sin prisa.</p>
+              <div class="letter-filmstrip" role="group" aria-label="Elegir un video de la carta">
+                <button type="button" class="letter-clip" aria-pressed="true" data-video="assets/instante-yadi.mp4" data-poster="assets/instante-poster.jpg" data-ratio="478 / 270" data-label="Un instante para ti">
+                  <img src="assets/instante-poster.jpg" alt="" loading="lazy" width="160" height="90"><span><small>01 · 13 s</small>Un instante para ti</span>
+                </button>
+                <button type="button" class="letter-clip" aria-pressed="false" data-video="assets/instante-2.mp4" data-poster="assets/instante-2-poster.jpg" data-ratio="9 / 16" data-label="Para mirar sin prisa" data-portrait="true">
+                  <img src="assets/instante-2-poster.jpg" alt="" loading="lazy" width="160" height="90"><span><small>02 · 14 s</small>Para mirar sin prisa</span>
+                </button>
+                <button type="button" class="letter-clip" aria-pressed="false" data-video="assets/instante-3.mp4" data-poster="assets/instante-3-poster.jpg" data-ratio="16 / 9" data-label="Otra pequeña pausa">
+                  <img src="assets/instante-3-poster.jpg" alt="" loading="lazy" width="160" height="90"><span><small>03 · 10 s</small>Otra pequeña pausa</span>
+                </button>
+                <button type="button" class="letter-clip" aria-pressed="false" data-video="assets/instante-4.mp4" data-poster="assets/instante-4-poster.jpg" data-ratio="16 / 9" data-label="Un detalle más">
+                  <img src="assets/instante-4-poster.jpg" alt="" loading="lazy" width="160" height="90"><span><small>04 · 7 s</small>Un detalle más</span>
+                </button>
+              </div>
+              <p id="activeClipLabel" class="active-clip-label" aria-live="polite">Un instante para ti</p>
               <video id="letterVideo" controls playsinline preload="none" poster="assets/instante-poster.jpg" aria-label="Un instante para Yadi">
                 <source data-src="assets/instante-yadi.mp4" type="video/mp4">
                 Tu navegador no puede reproducir este video. <a href="assets/instante-yadi.mp4">Abrir video</a>.
               </video>
-              <p class="video-note">Tú eliges cuándo darle play. La música del jardín espera.</p>
+              <p class="video-note">Tú eliges cuándo darle play. Cada instante tiene su propio sonido.</p>
               <p id="videoError" class="video-error" hidden>No se pudo cargar el video. <a href="assets/instante-yadi.mp4">Puedes abrirlo aquí</a>.</p>
             </div>
           </details>
@@ -182,10 +160,10 @@
   </div>
 
   <!-- Scripts modulares -->
-  <script src="js/audio.js?v=carta-yadi-3"></script>
-  <script src="js/botanicalTextures.js?v=carta-yadi-3"></script>
+  <script src="js/music.js?v=carta-yadi-5"></script>
+  <script src="js/botanicalTextures.js?v=carta-yadi-5"></script>
   <script src="js/botanicalAtmosphere.js"></script>
-  <script src="js/flower3d.js?v=carta-yadi-3"></script>
-  <script src="js/app.js?v=carta-yadi-3"></script>
+  <script src="js/flower3d.js?v=carta-yadi-5"></script>
+  <script src="js/app.js?v=carta-yadi-5"></script>
 </body>
 </html>

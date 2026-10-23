@@ -8,7 +8,13 @@ Sitio: https://franduxs.github.io/flores-moradas/
 
 La carta de Yadi incluye la fotografía facilitada por el usuario, presentada como una impresión sobre papel marfil. El panel se puede ampliar para leer sin prisa; Escape vuelve al jardín.
 
-«Un instante para ti» descubre el video, sin reproducción automática. Su archivo se carga solo al abrir el detalle. La reproducción suspende el contexto musical, conservando su posición; al pausar vuelve al estado musical anterior. Ocultar el video o plegar la carta detiene la reproducción.
+«Pequeños instantes para ti» descubre cuatro videos con selector y un solo reproductor, sin reproducción automática. El primer archivo se prepara al abrir el detalle; los otros se cargan al seleccionarlos. Ocultar el video o plegar la carta detiene la reproducción.
+
+### A Little Death — The Neighbourhood
+
+Por elección del usuario, se sustituyó la música sintetizada por el reproductor oficial de YouTube. No se descarga ni se aloja una copia de la canción. Se carga la API solo al abrir el apartado musical y se exige reproducción manual. El controlador pausa la canción cuando empieza un clip y la continúa después si estaba sonando; cerrar el apartado o esconder la página la pausa.
+
+Limitación comprobada: las publicaciones oficiales `474DkoBg4q8`, `LVqGRJLEj28` y `bRfMwoIizTQ` devolvieron error 150 (inserción deshabilitada) en el navegador local. En ese caso se oculta el marco fallido y se ofrece el enlace oficial. No se afirma reproducción musical real dentro de la carta; para audio de fondo independiente falta que el usuario facilite un archivo. Referencia: [API oficial de YouTube](https://developers.google.com/youtube/iframe_api_reference).
 
 Archivos en `assets/`: fotografía original JPEG (195.218 bytes), video web H.264/AAC (2.722.603 bytes, 478×270, 30 fps, 12,985 s) y póster. El video de origen medía 9.026.515 bytes y 478×850; la copia web retira únicamente sus franjas negras superiores/inferiores, detectadas a lo largo del clip. Los originales en Downloads no se modificaron.
 
@@ -16,10 +22,22 @@ Verificación: imagen cargada a 1600 px, reproducción real del MP4, controles v
 
 Referencias: [video HTML según MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video) y [carga diferida de video en web.dev](https://web.dev/articles/lazy-loading-video?hl=en).
 
+### Tres videos añadidos
+
+Las fuentes HDR10+ HEVC 4K se conservaron en sus rutas originales. Las copias web usan H.264/AAC, color SDR BT.709 mediante zscale/tonemap, 30 fps y faststart. Se respeta la orientación y no se recorta la imagen. Se excluyen las pistas de datos del teléfono.
+
+| Copia web | Orientación y tamaño | Duración | Bytes |
+| --- | --- | --- | --- |
+| instante-2.mp4 | Vertical, 720×1280 | 14,33 s | 7.077.600 |
+| instante-3.mp4 | Horizontal, 1280×720 | 10,30 s | 5.355.815 |
+| instante-4.mp4 | Horizontal, 1280×720 | 6,87 s | 2.588.447 |
+
+Las tres copias suman 15.021.862 bytes frente a 301.803.979 de origen. Playwright comprobó reproducción real de los cuatro clips, cambio de archivo, una sola instancia de video y suspensión musical durante cada clip. Cuatro tamaños sin desbordamiento, cero errores/avisos. Referencia de conversión: [FFmpeg Filters](https://ffmpeg.org/ffmpeg-filters.html).
+
 ## Experiencia
 
 - Floración progresiva, giro táctil y acordes al tocar las flores.
-- Tres melodías procedurales con Web Audio; selector y pausa.
+- Apartado musical para A Little Death con reproductor/enlace oficial de YouTube y alternativa cuando se restringe su inserción.
 - Carta abierta al entrar, desplazamiento interno en móvil y abrazo animado.
 - Composición lateral en escritorio; ramo sobre la carta en móvil.
 - Three.js local r128, sin compilación. Google Fonts necesita conexión.

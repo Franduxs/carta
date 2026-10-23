@@ -710,6 +710,26 @@ body { background: radial-gradient(ellipse at 30% 42%, #30203b 0%, #170d23 42%, 
 .keepsake-content p { color: #745c6e; font-size: .78rem; line-height: 1.7; margin-bottom: .75rem; }
 .keepsake-content video { display: block; width: 100%; max-height: 45dvh; aspect-ratio: 478 / 270; object-fit: contain; background: #17101b; border-radius: 10px; }
 .keepsake-content .video-note { margin: .6rem 0 0; font-size: .64rem; color: #8a707f; }
+.letter-filmstrip { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin: 1rem 0; }
+.letter-clip { display: flex; align-items: center; gap: .6rem; text-align: left; padding: .4rem; border: 1px solid #bda0ad66; border-radius: 10px; background: #fffbf555; cursor: pointer; color: #62445e; font: inherit; min-width: 0; }
+.letter-clip img { width: 54px; height: 54px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+.letter-clip span { font-family: var(--font-serif); font-size: .73rem; line-height: 1.4; }
+.letter-clip small { display: block; color: #927484; font: .53rem var(--font-body); letter-spacing: .08em; margin-bottom: .25rem; }
+.letter-clip[aria-pressed="true"] { border-color: #9c6c8a; box-shadow: inset 0 0 0 1px #9c6c8a; background: #e9d9e2; }
+.keepsake-content .active-clip-label { font-family: var(--font-serif); color: #77536b; margin: .6rem 0; }
+.keepsake-content video.is-portrait { width: min(100%, 240px); margin-inline: auto; }
+.song-shortcut { display: flex; align-items: center; gap: .65rem; padding: .55rem .9rem; color: #efdae9; border: 1px solid #d3b1cd44; background: #24172cbb; border-radius: 30px; font: .74rem var(--font-body); text-align: left; cursor: pointer; }
+.song-shortcut small { display: block; color: #bfa6bf; font-size: .55rem; margin-top: .1rem; }
+.song-shortcut.is-playing { box-shadow: 0 0 20px #c48aab33; border-color: #c48aab; }
+.letter-song { border: 1px solid #c8a9ba77; border-radius: 12px; padding: .85rem; background: #fffbf555; }
+.letter-song summary { cursor: pointer; display: flex; align-items: center; gap: .75rem; color: #735068; font: .95rem var(--font-serif); list-style: none; }
+.letter-song summary::-webkit-details-marker { display: none; }
+.letter-song summary small { display: block; margin-top: .3rem; font: .63rem var(--font-body); color: #957688; }
+.song-content { margin-top: 1rem; }
+.song-content iframe { display: block; width: 100%; min-width: 200px; height: 240px; border: 0; border-radius: 8px; background: #19131a; }
+.song-status { font-size: .65rem; line-height: 1.6; margin: .65rem 0; color: #8a6d7e; }
+.song-external { font-size: .65rem; color: #78536e; text-underline-offset: 3px; }
+.song-unavailable .song-external { display: inline-block; padding: .65rem 1rem; border-radius: 24px; background: #79566e; color: #fff4ec; text-decoration: none; font-size: .75rem; }
 .video-error a { color: #61425b; }
 .bottom-card-wrapper.reading-mode { position: fixed; inset: 70px 20px 20px; width: min(640px, calc(100vw - 40px)); max-width: none; margin: auto; transform: none; z-index: 70; }
 .reading-mode .glass-card { height: 100%; display: flex; flex-direction: column; box-shadow: 0 25px 120px #000a; }

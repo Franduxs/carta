@@ -209,6 +209,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const error = document.getElementById('videoError');
   if (!wrapper || !reader || !video || !keepsake) return;
 
+  const clips = [...document.querySelectorAll('.letter-clip')];
+  clips.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (button.getAttribute('aria-pressed') === 'true') return;
+      video.pause();
+      const source = video.querySelector('source');
+      source.dataset.src = button.dataset.video;
+      source.src = button.dataset.video;
+      video.poster = button.dataset.poster;
+      video.style.aspectRatio = button.dataset.ratio;
+      video.classList.toggle('is-portrait', button.dataset.portrait === 'true');
+      video.setAttribute('aria-label', button.dataset.label + ', para Yadi');
+      video.querySelectorAll('a').forEach((link) => { link.href = button.dataset.video; });
+      error.querySelector('a').href = button.dataset.video;
+      error.hidden = true;
+      document.getElementById('activeClipLabel').textContent = button.dataset.label;
+      clips.forEach((clip) => clip.setAttribute('aria-pressed', String(clip === button)));
+      video.load();
+      requestAnimationFrame(() => video.scrollIntoView({ block: 'nearest', behavior: 'auto' }));
+    });
+  });
+
   function setReadingMode(active) {
     wrapper.classList.toggle('reading-mode', active);
     reader.setAttribute('aria-pressed', String(active));
@@ -246,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Una cola serial evita carreras entre play/pause rápidos del video.
   let audioTransition = Promise.resolve();
   function syncAudio() {
+    if (window.letterMusic) window.letterMusic.syncWithVideo();
     const engine = window.soundEngine;
     if (!engine) return;
     engine.mediaActive = !video.paused && !video.ended;
@@ -277,6 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
   new MutationObserver(() => {
     document.getElementById('btnToggleArrow').setAttribute('aria-expanded', String(note.classList.contains('expanded')));
     if (!note.classList.contains('expanded')) {
+      if (window.letterMusic) window.letterMusic.pause();
       video.pause();
       setReadingMode(false);
     }
