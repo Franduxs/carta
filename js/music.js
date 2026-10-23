@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     player = new YT.Player('officialSongPlayer', {
       host: 'https://www.youtube-nocookie.com',
       width: '100%', height: '240', videoId: 'bRfMwoIizTQ',
-      playerVars: { origin: location.origin, playsinline: 1, rel: 0, autoplay: 1, loop: 1, playlist: 'bRfMwoIizTQ' },
+      playerVars: { origin: location.origin, playsinline: 1, rel: 0, controls: 0, autoplay: 1, loop: 1, playlist: 'bRfMwoIizTQ' },
       events: {
         onReady(event) {
           ready = true;
@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         onStateChange(event) {
           shortcut.classList.toggle('is-playing', event.data === 1);
+          shortcut.setAttribute('aria-pressed', String(event.data === 1));
+          shortcut.setAttribute('aria-label', (event.data === 1 ? 'Pausar' : 'Escuchar') + ' A Little Death de The Neighbourhood');
           if (event.data === 1) {
             // Un evento de carga tardío no debe interrumpir un clip personal.
             if (videoActive || (!video.paused && !video.ended)) {
@@ -109,12 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } else pause();
   });
   shortcut.addEventListener('click', () => {
+    if (ready && player.getPlayerState() === 1) { pause(); return; }
     autoPending = true;
     panel.open = true;
+    if (!video.paused) video.pause();
     if (ready && video.paused && !document.hidden) player.playVideo();
-    const reader = document.getElementById('btnReadingMode');
-    if (reader.getAttribute('aria-pressed') !== 'true') reader.click();
-    panel.scrollIntoView({ block: 'start', behavior: 'auto' });
   });
   // Si el navegador bloquea el inicio con sonido, usar el primer gesto real.
   function startOnGesture(event) {

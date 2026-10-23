@@ -2,7 +2,9 @@
 
 Jardín interactivo en tonos lavanda y rosa, con siete flores 3D de inspiración peonía, pequeñas flores perladas, follaje y una carta de Franduxs.
 
-Sitio: https://franduxs.github.io/flores-moradas/
+Sitio: https://franduxs.github.io/carta-para-yadi/
+
+El repositorio público se renombró a `Franduxs/carta-para-yadi`; la carpeta local conserva su nombre para mantener la continuidad del workspace. El botón musical reproduce/pausa una única canción sin abrir el modo lectura. El reproductor oficial permanece visible, con controles reducidos; anuncios y bloqueo de autoplay dependen de YouTube y del navegador.
 
 ## Carta con foto y video
 
