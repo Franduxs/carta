@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Si el navegador bloquea el inicio con sonido, usar el primer gesto real.
   function startOnGesture(event) {
     if (!autoPending || !ready || !panel.open || document.hidden || !video.paused) return;
-    if (event.target.closest('video, .letter-clip, #videoKeepsake, #cardToggle, #letterSong summary')) return;
+    if (event.target.closest('video, .letter-clip, #videoKeepsake, #cardToggle, #songShortcut, #letterSong summary')) return;
     player.playVideo();
   }
   document.addEventListener('pointerdown', startOnGesture);
