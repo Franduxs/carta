@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     syncWithVideo() {
       const active = !video.paused && !video.ended;
       if (active && !videoActive) {
-        resumeAfterVideo = ready && player.getPlayerState() === 1;
+        resumeAfterVideo = ready && [1, 3].includes(player.getPlayerState());
         videoActive = true;
         if (ready) player.pauseVideo();
       } else if (!active && videoActive) {
@@ -49,14 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
         onStateChange(event) {
           shortcut.classList.toggle('is-playing', event.data === 1);
           if (event.data === 1) {
+            // Un evento de carga tardío no debe interrumpir un clip personal.
+            if (videoActive || (!video.paused && !video.ended)) {
+              player.pauseVideo();
+              return;
+            }
             if (document.hidden || !panel.open || !document.getElementById('noteCard').classList.contains('expanded')) {
               pause();
               return;
             }
-            // Elegir la canción detiene el clip antes de devolverle el sonido.
             resumeAfterVideo = false;
-            videoActive = false;
-            video.pause();
             status.textContent = 'A Little Death · The Neighbourhood';
           } else if (event.data === 2) {
             status.textContent = videoActive ? 'La canción espera mientras ves el video.' : 'Toca reproducir para continuar.';
